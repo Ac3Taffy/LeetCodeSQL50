@@ -1,0 +1,56 @@
++---------------+---------+
+| Column Name   | Type    |
++---------------+---------+
+| product_id    | int     |
+| new_price     | int     |
+| change_date   | date    |
++---------------+---------+
+(product_id, change_date) 是此表的主键（具有唯一值的列组合）。
+这张表的每一行分别记录了 某产品 在某个日期 更改后 的新价格。
+一开始，所有产品价格都为 10。
+
+编写一个解决方案，找出在 2019-08-16 所有产品的价格。
+
+以 任意顺序 返回结果表。
+
+结果格式如下例所示。
+
+ 
+
+示例 1:
+
+输入：
+Products 表:
++------------+-----------+-------------+
+| product_id | new_price | change_date |
++------------+-----------+-------------+
+| 1          | 20        | 2019-08-14  |
+| 2          | 50        | 2019-08-14  |
+| 1          | 30        | 2019-08-15  |
+| 1          | 35        | 2019-08-16  |
+| 2          | 65        | 2019-08-17  |
+| 3          | 20        | 2019-08-18  |
++------------+-----------+-------------+
+输出：
++------------+-------+
+| product_id | price |
++------------+-------+
+| 2          | 50    |
+| 1          | 35    |
+| 3          | 10    |
++------------+-------+
+
+
+碎碎念：好麻烦一个题
+左边的表选id，右边的表选价格（id 价格的表（选时间）），把两个表left join然后选择id和new_price，记得没有的写10
+SELECT p.product_id, IFNULL(t.new_price,10) FROM
+(SELECT DISTINCT product_id FROM Products) p
+LEFT JOIN (
+SELECT product_id, new_price FROM Products
+WHERE (product_id,change_date) IN
+(SELECT product_id, MAX(change_date) FROM Products
+WHERE change_date<='2019-08-16'
+GROUP BY product_id) 
+) t
+ON p.product_id=t.product_id;
+  
