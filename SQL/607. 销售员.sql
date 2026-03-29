@@ -96,6 +96,6 @@
 -- 根据表 orders 中的订单 '3' 和 '4' ，容易看出只有 'John' 和 'Pam' 两个销售员曾经向公司 'RED' 销售过。
 -- 所以我们需要输出表 salesperson 中所有其他人的名字。
 SELECT name FROM SalesPerson WHERE sales_id NOT IN(
-SELECT sp.sales_id FROM Orders o 
+SELECT o.sales_id FROM Orders o 
 LEFT JOIN Company c ON o.com_id = c.com_id 
-WHERE c.name = 'RED')
+WHERE c.name = 'RED');
